@@ -77,7 +77,7 @@ print(f"\nK ottimale trovato: {optimal_k}")
 # Preparo la pipeline definitiva
 pipeline = ImbPipeline(steps=[
     ('smote', SMOTE(random_state=42)),
-    ('scaler', StandardScaler()),
+    ('scaler', StandardScaler()),  # <--- STANDARDIZZAZIONE
     ('knn', KNeighborsClassifier(n_neighbors=optimal_k))
 ])
 

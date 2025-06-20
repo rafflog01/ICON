@@ -100,6 +100,14 @@ best_model = grid_search.best_estimator_
 print("\n=== MIGLIORI IPERPARAMETRI ===")
 print(grid_search.best_params_)
 
+# Dopo il fitting della grid search/pipeline sul training set
+smote_step = best_model.named_steps['smote']
+X_sm, y_sm = smote_step.fit_resample(
+    preprocessor.fit_transform(X_train), y_train
+)
+print("\nDistribuzione delle classi dopo SMOTE (dopo il fit della pipeline):")
+print(pd.Series(y_sm).value_counts())
+
 # 7. Valutazione
 y_pred = best_model.predict(X_test)
 y_probs = best_model.predict_proba(X_test)[:, 1]
