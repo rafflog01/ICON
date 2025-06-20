@@ -101,6 +101,7 @@ plt.plot(range(1, 20), error, color='red', linestyle='dashed', marker='o', marke
 plt.title('Error Rate vs K Value')
 plt.xlabel('K Value')
 plt.ylabel('Mean Error')
+plt.xticks(range(1, 20, 1))
 plt.grid(True, linestyle='--', alpha=0.7)
 plt.show()
 
