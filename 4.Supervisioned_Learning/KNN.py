@@ -110,8 +110,9 @@ conf_matrix = confusion_matrix(y_test, prediction)
 conf_matrix_percent = conf_matrix.astype('float') / conf_matrix.sum(axis=1)[:, np.newaxis] * 100
 
 plt.figure(figsize=(10, 7))
-sn.heatmap(pd.DataFrame(conf_matrix_percent, index=['Benigno (0)', 'Maligno (1)'],
-                        columns=['Pred Benigno (0)', 'Pred Maligno (1)']),
+sn.heatmap(pd.DataFrame(conf_matrix_percent, 
+                        index=['Alive (0)', 'Dead (1)'],
+                        columns=['Pred Alive (0)', 'Pred Dead (1)']),
            annot=True, fmt='.2f', cmap='Blues')
 plt.title('Matrice di Confusione Normalizzata (%)')
 plt.ylabel('Valore Reale')
