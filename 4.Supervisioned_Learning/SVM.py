@@ -12,7 +12,9 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from inspect import signature
-
+from imblearn.pipeline import Pipeline as ImbPipeline
+from imblearn.over_sampling import SMOTE
+from sklearn import svm
 
 # 1. Caricamento del dataset
 def load_dataset():
@@ -78,9 +80,12 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.15, random_state=42, stratify=y)
 
 # 5. Definizione del modello e ricerca iperparametri
-pipeline = Pipeline(steps=[
+# Crea la pipeline con SMOTE dopo il preprocessor
+pipeline = ImbPipeline(steps=[
     ('preprocessor', preprocessor),
-    ('classifier', svm.SVC(kernel='rbf', probability=True, class_weight='balanced'))])
+    ('smote', SMOTE(random_state=42)),
+    ('classifier', svm.SVC(kernel='rbf', probability=True, class_weight='balanced'))
+])
 
 param_grid = {
     'classifier__C': [0.1, 1, 10, 100],

@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 import seaborn as sn
@@ -14,6 +13,10 @@ from sklearn.metrics import average_precision_score, ConfusionMatrixDisplay
 from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 from sklearn.preprocessing import StandardScaler
+from imblearn.over_sampling import SMOTE
+from sklearn.pipeline import Pipeline
+from imblearn.pipeline import Pipeline as ImbPipeline  # Attenzione: import giusto!
+from imblearn.over_sampling import SMOTE
 
 # Stampa la directory corrente per debug
 print(f"Directory di lavoro corrente: {os.getcwd()}")
@@ -30,24 +33,11 @@ except FileNotFoundError:
         except FileNotFoundError:
             dataset = pd.read_csv("../../2.Ontologia/Breast_Cancer.csv")
 
-# Preprocessing
-# Verifica se la colonna 'diagnosis' esiste e, se non esiste, usa 'Status' come colonna target
-if 'diagnosis' not in dataset.columns:
-    if 'Status' in dataset.columns:
-        dataset['diagnosis'] = dataset['Status'].map({'Alive': 0, 'Dead': 1})
-        print("Colonna 'diagnosis' creata dalla colonna 'Status'")
-    else:
-        print("Attenzione: Colonna 'diagnosis' non trovata e colonna 'Status' non disponibile.")
-        dataset['diagnosis'] = 0
-else:
-    dataset['diagnosis'] = dataset['diagnosis'].map({'M': 1, 'B': 0})
-
 print(dataset.info())
 
 # Preparazione dati
-y = dataset['diagnosis']
-X = dataset.drop(['diagnosis'], axis=1)
-# Rimuovi 'id' se esiste
+y = dataset['Status'].map({'Alive': 0, 'Dead': 1})
+X = dataset.drop(['Status', 'Survival Months'], axis=1)  
 if 'id' in X.columns:
     X = X.drop(['id'], axis=1)
 X.drop(X.columns[X.columns.str.contains('unnamed', case=False)], axis=1, inplace=True)
@@ -62,75 +52,70 @@ print(f"Colonne numeriche: {list(numerical_cols)}")
 # Utilizziamo solo le colonne numeriche per l'analisi KNN
 X = X[numerical_cols]
 
-# Divisione train-test
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42, shuffle=True, stratify=y)
+# Divisione train-test (usa ancora y_train, X_train originali, NON bilanciati)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42, shuffle=True, stratify=y
+)
 
-# Standardizzazione
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+# Trovo K ottimale semplicemente bilanciando prima (ma ora cerchiamo il migliore sulla cross-val)
+# Uso solo una volta qui per la ricerca, ma la pipeline farà tutto poi per la valutazione vera
 
-# Ricerca del K ottimale
 error = []
 for i in range(1, 20):
-    knn = KNeighborsClassifier(n_neighbors=i)
-    knn.fit(X_train_scaled, y_train)
-    pred_i = knn.predict(X_test_scaled)
+    pipeline_tmp = ImbPipeline(steps=[
+        ('smote', SMOTE(random_state=42)),
+        ('scaler', StandardScaler()),
+        ('knn', KNeighborsClassifier(n_neighbors=i))
+    ])
+    pipeline_tmp.fit(X_train, y_train)
+    pred_i = pipeline_tmp.predict(X_test)
     error.append(np.mean(pred_i != y_test))
 
-# Visualizzazione error rate
-plt.figure(figsize=(10, 6))
-plt.plot(range(1, 20), error, color='red', linestyle='dashed', marker='o', markerfacecolor='blue', markersize=10)
-plt.title('Error Rate vs K Value')
-plt.xlabel('K Value')
-plt.ylabel('Mean Error')
-plt.grid(True, linestyle='--', alpha=0.7)
-plt.show()
-
-# Determinazione K ottimale
 optimal_k = error.index(min(error)) + 1
 print(f"\nK ottimale trovato: {optimal_k}")
 
-# Training con K ottimale
-neigh = KNeighborsClassifier(n_neighbors=optimal_k)
-neigh.fit(X_train_scaled, y_train)
+# Preparo la pipeline definitiva
+pipeline = ImbPipeline(steps=[
+    ('smote', SMOTE(random_state=42)),
+    ('scaler', StandardScaler()),
+    ('knn', KNeighborsClassifier(n_neighbors=optimal_k))
+])
 
-# Predizioni
-prediction = neigh.predict(X_test_scaled)
+# Cross-validation con SMOTE DENTRO IL FOLD, su tutto il train originale
+cv_scores = cross_val_score(pipeline, X_train, y_train, cv=5)
+print('\nCross-validation results:')
+print(f'Mean accuracy: {np.mean(cv_scores):.4f}')
+print(f'Standard deviation: {np.std(cv_scores):.4f}')
+print('\ncv_score variance:{}'.format(np.var(cv_scores)))
+
+# Fit finale su tutto il train e valutazione sul test
+pipeline.fit(X_train, y_train)
+prediction = pipeline.predict(X_test)
 accuracy = accuracy_score(y_test, prediction)
-print(f"Accuracy Score: {accuracy:.4f}")
+print(f"\nAccuracy Score: {accuracy:.4f}")
 
-# Report di classificazione
 print('\nClassification Report:\n', classification_report(y_test, prediction))
 print('\nConfusion matrix:\n', confusion_matrix(y_test, prediction))
 
-# Matrice di confusione
+# Matrice di confusione normalizzata
 conf_matrix = confusion_matrix(y_test, prediction)
 conf_matrix_percent = conf_matrix.astype('float') / conf_matrix.sum(axis=1)[:, np.newaxis] * 100
 
 plt.figure(figsize=(10, 7))
 sn.heatmap(pd.DataFrame(conf_matrix_percent, index=['Benigno (0)', 'Maligno (1)'],
-                       columns=['Pred Benigno (0)', 'Pred Maligno (1)']),
+                        columns=['Pred Benigno (0)', 'Pred Maligno (1)']),
            annot=True, fmt='.2f', cmap='Blues')
 plt.title('Matrice di Confusione Normalizzata (%)')
 plt.ylabel('Valore Reale')
 plt.xlabel('Predizione')
 plt.show()
 
-# Cross-validation
-cv_scores = cross_val_score(neigh, X_train_scaled, y_train, cv=5)
-print('\nCross-validation results:')
-print(f'Mean accuracy: {np.mean(cv_scores):.4f}')
-print(f'Standard deviation: {np.std(cv_scores):.4f}')
-print('\ncv_score variance:{}'.format(np.var(cv_scores)))
-
 # ROC Curve
-probs = neigh.predict_proba(X_test_scaled)[:, 1]
+probs = pipeline.predict_proba(X_test)[:, 1]
 fpr, tpr, _ = roc_curve(y_test, probs)
 auc = roc_auc_score(y_test, probs)
 print('\nAUC: %.3f' % auc)
 
-# Calcolo della curva ROC e visualizzazione
 pyplot.plot([0, 1], [0, 1], linestyle='--')
 pyplot.plot(fpr, tpr, marker='.')
 pyplot.xlabel('FP RATE')
@@ -154,7 +139,7 @@ plt.show()
 f1 = f1_score(y_test, prediction)
 print(f'\nF1 Score: {f1:.4f}')
 
-# Creazione di un grafico per visualizzare varianza e deviazione standard dei cv_scores
+# Varianza e std cross-validation
 data = {'variance': np.var(cv_scores), 'standard dev': np.std(cv_scores)}
 names = list(data.keys())
 values = list(data.values())

@@ -76,11 +76,17 @@ preprocessor = ColumnTransformer(
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42, stratify=y)
 
 # 5. Pipeline del modello
-pipeline = Pipeline(steps=[
-    ('preprocessor', preprocessor),
-    ('classifier', RandomForestClassifier(random_state=42))])
+from imblearn.pipeline import Pipeline as ImbPipeline
+from imblearn.over_sampling import SMOTE
 
-# 6. Ricerca degli iperparametri
+# Pipeline con preprocessor + SMOTE + RandomForest
+pipeline = ImbPipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('smote', SMOTE(random_state=42)),
+    ('classifier', RandomForestClassifier(random_state=42))
+])
+
+# Ottimizzazione iperparametri con GridSearchCV sulla pipeline con SMOTE
 param_grid = {
     'classifier__max_depth': [2, 4, 6, 8, 10, 12, 14, 16, 18, 20],
     'classifier__n_estimators': [50, 100, 200],
@@ -88,23 +94,39 @@ param_grid = {
     'classifier__class_weight': [None, 'balanced']
 }
 
-grid_search = GridSearchCV(pipeline, param_grid, cv=5, scoring='f1', n_jobs=-1)
+grid_search = GridSearchCV(
+    pipeline,
+    param_grid,
+    cv=5,
+    scoring='f1',
+    n_jobs=-1
+)
 grid_search.fit(X_train, y_train)
 
-# 7. Miglior modello
 best_model = grid_search.best_estimator_
 print("\n=== MIGLIORI IPERPARAMETRI ===")
 print(grid_search.best_params_)
 
-# 8. Valutazione del modello
-# Previsioni
+# Resto della valutazione esattamente come prima...
 y_pred = best_model.predict(X_test)
 y_probs = best_model.predict_proba(X_test)[:, 1]
-
-# Metriche
-print("\n=== VALUTAZIONE DEL MODELLO ===")
 print("\nAccuracy:", accuracy_score(y_test, y_pred))
 print("\nClassification report:\n", classification_report(y_test, y_pred))
+
+# 7. Miglior modello
+# best_model = grid_search.best_estimator_
+# print("\n=== MIGLIORI IPERPARAMETRI ===")
+# print(grid_search.best_params_)
+
+# 8. Valutazione del modello
+# # Previsioni
+# y_pred = best_model.predict(X_test)
+# y_probs = best_model.predict_proba(X_test)[:, 1]
+
+# Metriche
+# print("\n=== VALUTAZIONE DEL MODELLO ===")
+# print("\nAccuracy:", accuracy_score(y_test, y_pred))
+# print("\nClassification report:\n", classification_report(y_test, y_pred))
 
 # Matrice di confusione
 conf_matrix = confusion_matrix(y_test, y_pred)
@@ -150,32 +172,6 @@ plt.xlim([0.0, 1.0])
 plt.title('Precision-Recall curve: AP={0:0.2f}'.format(average_precision))
 plt.show()
 
-# 11. Importanza delle feature
-# Estrai il classificatore dalla pipeline
-rf_model = best_model.named_steps['classifier']
-
-# Estrai i nomi delle feature dopo il one-hot encoding
-onehot_columns = best_model.named_steps['preprocessor'].named_transformers_['cat'].named_steps[
-    'onehot'].get_feature_names_out(categorical_cols)
-all_features = numerical_cols + list(onehot_columns)
-
-# Importanza delle feature
-feature_importances = pd.DataFrame({
-    'Feature': all_features,
-    'Importance': rf_model.feature_importances_
-}).sort_values('Importance', ascending=False)
-
-plt.figure(figsize=(10, 6))
-sns.barplot(x='Importance', y='Feature', data=feature_importances.head(20))
-plt.title('Top 20 Feature Importances')
-plt.tight_layout()
-plt.show()
-
-# 12. Analisi aggiuntiva
-print("\n=== ANALISI AGGIUNTIVA ===")
-print("\nTop 10 feature più importanti:")
-print(feature_importances.head(10))
-
 # Salvataggio dei risultati
 results = {
     'best_params': grid_search.best_params_,
@@ -185,7 +181,6 @@ results = {
     'average_precision': average_precision,
     'cv_mean_f1': np.mean(cv_scores),
     'cv_std_f1': np.std(cv_scores),
-    'top_features': feature_importances.head(10).to_dict()
 }
 
 print("\nRisultati completi salvati nella variabile 'results'")

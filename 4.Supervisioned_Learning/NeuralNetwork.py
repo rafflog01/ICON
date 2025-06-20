@@ -11,6 +11,7 @@ from sklearn.metrics import confusion_matrix, classification_report, roc_auc_sco
     average_precision_score, precision_recall_curve, f1_score
 from sklearn.utils import class_weight
 from sklearn.model_selection import StratifiedKFold
+from imblearn.over_sampling import SMOTE
 
 # Riproducibilita'
 np.random.seed(42)
@@ -109,27 +110,49 @@ plt.show()
 # K-Fold Cross Validation
 kf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 cv_scores = []
-X_for_cv = X_train_scaled.reset_index(drop=True)
-y_for_cv = y_train.reset_index(drop=True)
 
-for train_index, val_index in kf.split(X_for_cv, y_for_cv):
-    X_train_fold = X_for_cv.iloc[train_index]
-    X_val_fold = X_for_cv.iloc[val_index]
-    y_train_fold = y_for_cv.iloc[train_index]
-    y_val_fold = y_for_cv.iloc[val_index]
+for train_index, val_index in kf.split(X_train, y_train):
+    # Separa i dati per il fold corrente
+    X_tr_fold, X_val_fold = X_train.iloc[train_index], X_train.iloc[val_index]
+    y_tr_fold, y_val_fold = y_train.iloc[train_index], y_train.iloc[val_index]
 
-    missing_cols = set(X_train_fold.columns) - set(X_val_fold.columns)
-    for col in missing_cols:
-        X_val_fold[col] = 0
-    X_val_fold = X_val_fold[X_train_fold.columns]
+    # Riconoscimento colonne numeriche/categoriche (solo per consistenza)
+    categorical_cols_cv = X_tr_fold.select_dtypes(include=['object', 'category']).columns
+    numeric_cols_cv = X_tr_fold.select_dtypes(include=['int64', 'float64']).columns
 
-    modelK = create_model(X_train_fold.shape[1])
-    modelK.fit(X_train_fold, y_train_fold, epochs=30, batch_size=64, verbose=0,
+    # One-hot encoding per le categoriche: colonne consistenti col training
+    X_tr_cat = pd.get_dummies(X_tr_fold[categorical_cols_cv], drop_first=True) if len(categorical_cols_cv) > 0 else pd.DataFrame(index=X_tr_fold.index)
+    X_val_cat = pd.get_dummies(X_val_fold[categorical_cols_cv], drop_first=True) if len(categorical_cols_cv) > 0 else pd.DataFrame(index=X_val_fold.index)
+
+    # Standardizzazione numeriche
+    scaler_cv = StandardScaler()
+    X_tr_num_scaled = pd.DataFrame(scaler_cv.fit_transform(X_tr_fold[numeric_cols_cv]), columns=numeric_cols_cv, index=X_tr_fold.index) if len(numeric_cols_cv) > 0 else pd.DataFrame()
+    X_val_num_scaled = pd.DataFrame(scaler_cv.transform(X_val_fold[numeric_cols_cv]), columns=numeric_cols_cv, index=X_val_fold.index) if len(numeric_cols_cv) > 0 else pd.DataFrame()
+
+    # Combina le features per train e validation
+    X_tr_scaled = pd.concat([X_tr_num_scaled, X_tr_cat], axis=1)
+    X_val_scaled = pd.concat([X_val_num_scaled, X_val_cat], axis=1)
+    # Allinea le colonne
+    X_val_scaled = X_val_scaled.reindex(columns=X_tr_scaled.columns, fill_value=0)
+
+    # Applica SMOTE SOLO dopo la codifica e la standardizzazione!
+    smote = SMOTE(random_state=42)
+    X_tr_fold_bal, y_tr_fold_bal = smote.fit_resample(X_tr_scaled, y_tr_fold)
+
+    # Riallina indici target
+    y_tr_fold_bal = pd.Series(y_tr_fold_bal, index=X_tr_fold_bal.index)
+    y_val_fold = y_val_fold.loc[X_val_scaled.index]
+
+    # Definisci/costruiamo il modello
+    modelK = create_model(X_tr_scaled.shape[1])
+    early_stopping = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+    modelK.fit(X_tr_fold_bal, y_tr_fold_bal, epochs=30, batch_size=64, verbose=0,
                validation_split=0.2, callbacks=[early_stopping])
-    val_loss, val_accuracy = modelK.evaluate(X_val_fold, y_val_fold)
+
+    val_loss, val_accuracy = modelK.evaluate(X_val_scaled, y_val_fold)
     cv_scores.append(val_accuracy)
 
-# Statistiche CV
+# Report finale
 print('\ncv_scores mean:{}'.format(np.mean(cv_scores)))
 print('\ncv_score variance:{}'.format(np.var(cv_scores)))
 print('\ncv_score standard deviation:{}'.format(np.std(cv_scores)))
