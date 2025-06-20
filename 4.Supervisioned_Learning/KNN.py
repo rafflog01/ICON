@@ -58,8 +58,6 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Trovo K ottimale semplicemente bilanciando prima (ma ora cerchiamo il migliore sulla cross-val)
-# Uso solo una volta qui per la ricerca, ma la pipeline farà tutto poi per la valutazione vera
-
 error = []
 for i in range(1, 20):
     pipeline_tmp = ImbPipeline(steps=[
@@ -96,6 +94,15 @@ print(f"\nAccuracy Score: {accuracy:.4f}")
 
 print('\nClassification Report:\n', classification_report(y_test, prediction))
 print('\nConfusion matrix:\n', confusion_matrix(y_test, prediction))
+
+# Visualizzazione error rate
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, 20), error, color='red', linestyle='dashed', marker='o', markerfacecolor='blue', markersize=10)
+plt.title('Error Rate vs K Value')
+plt.xlabel('K Value')
+plt.ylabel('Mean Error')
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.show()
 
 # Matrice di confusione normalizzata
 conf_matrix = confusion_matrix(y_test, prediction)
