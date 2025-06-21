@@ -1,6 +1,5 @@
 from owlready2 import *
 import os
-import pandas as pd
 
 print("ONTOLOGIA\n")
 
@@ -20,37 +19,34 @@ print()
 
 # Stampa di tutte le object properties dell'ontologia
 print("####################################################################################################")
-print("OBJECT PROPERTIES DELL'ONTOLOGIA\n")
+print("LISTA DELLE OBJECT PROPERTIES DELL'ONTOLOGIA\n")
 object_properties = list(onto.object_properties())
 for prop in object_properties:
-    print(f"• PROPRIETÀ: {prop.name}")
+    print(f"• OBJECT PROPERTY: {prop.name}")
 print()
 
 # Stampa di tutte le data properties dell'ontologia
 print("####################################################################################################")
-print("DATA PROPERTIES DELL'ONTOLOGIA\n")
+print("LISTA DELLE DATA PROPERTIES DELL'ONTOLOGIA\n")
 data_properties = list(onto.data_properties())
 for prop in data_properties:
-    print(f"• PROPRIETÀ: {prop.name}")
+    print(f"• PROPERTY: {prop.name}")
 print()
 
-print("####################################################################################################")
-print("Lista Person nella ontologia:\n")
-persons = onto.search(is_a=onto.Person)
-print([p.name for p in persons], "\n")
+print("\n##################################################QUERIES##################################################")
 
-print("Lista Cancer nella ontologia:\n")
-cancers = onto.search(is_a=onto.Cancer)
-print([c.name for c in cancers], "\n")
+# Query per ottenere pazienti con diagnosi "B" (Benigni)
+diagnosis_B = onto.search_one(type=onto.Diagnosis, diagnosis="B")
+query_result = list(onto.search(type=onto.Patient, hasDiagnosis=diagnosis_B))
 
-print("Lista Breast_cancer nella ontologia:\n")
-b_cancers = onto.search(is_a=onto.Breast_cancer)
-print([bc.name for bc in b_cancers], "\n")
+print("\nPAZIENTI CON DIAGNOSI BENIGNA:")
+for patient in query_result:
+    print(f"• PAZIENTI: {patient.name}")
 
-print("Lista Analysis nella ontologia:\n")
-analysis = onto.search(is_a=onto.Analysis)
-print([a.name for a in analysis], "\n")
+# Query per ottenere pazienti con diagnosi "M" (Maligni)
+diagnosis_M = onto.search_one(type=onto.Diagnosis, diagnosis="M")
+query_result = list(onto.search(type=onto.Patient, hasDiagnosis=diagnosis_M))
 
-print("Lista di persone che hanno un cancro al seno:\n")
-patients = onto.search(is_a=onto.Person, has_breast_cancer="*")
-print([p.name for p in patients], "\n")
+print("\nPAZIENTI CON DIAGNOSI MALIGNA:")
+for patient in query_result:
+    print(f"• PAZIENTI: {patient.name}")

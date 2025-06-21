@@ -7,35 +7,17 @@ import matplotlib.pyplot as plt
 
 # Caricamento del dataset
 try:
-    dataset = pd.read_csv("Breast_Cancer.csv")
+    dataset = pd.read_csv("breast-cancer.csv")
 except FileNotFoundError:
     try:
-        dataset = pd.read_csv("../2.Ontologia/Breast_Cancer.csv")
+        dataset = pd.read_csv("../2.Ontologia/breast-cancer.csv")
     except FileNotFoundError:
-        dataset = pd.read_csv("2.Ontologia/Breast_Cancer.csv")
-
-# Verifica se la colonna 'diagnosis' esiste e, se non esiste, usa 'Status' come colonna target
-if 'diagnosis' not in dataset.columns:
-    if 'Status' in dataset.columns:
-        dataset['diagnosis'] = dataset['Status'].map({'Alive': 0, 'Dead': 1})
-    else:
-        print("Attenzione: Colonna 'diagnosis' non trovata. Creata colonna vuota.")
-        dataset['diagnosis'] = 0
-else:
-    dataset['diagnosis'] = dataset['diagnosis'].map({'M': 1, 'B': 0})
-
+        dataset = pd.read_csv("2.Ontologia/breast-cancer.csv")
+dataset['diagnosis'] = dataset['diagnosis'].map({'M': 1, 'B': 0})
 dataset.drop(columns=dataset.columns[dataset.columns.str.contains('unnamed', case=False)], inplace=True)
 
-# Rimuovere le colonne per il clustering
-columns_to_drop = ['diagnosis']
-if 'id' in dataset.columns:
-    columns_to_drop.append('id')
-
-X = dataset.drop(columns_to_drop, axis=1)
-
-# Selezione solo delle colonne numeriche per evitare errori di conversione
-numeric_columns = X.select_dtypes(include=['int64', 'float64']).columns
-X = X[numeric_columns]
+# Rimuovere la colonna 'id' e 'diagnosis' per il clustering
+X = dataset.drop(['id', 'diagnosis'], axis=1)
 
 # Standardizzazione dei dati
 scaler = StandardScaler()
@@ -50,16 +32,18 @@ for k in k_range:
     kmeans = KMeans(n_clusters=k, n_init=10, random_state=42)
     kmeans.fit(X_scaled)
     wcss.append(kmeans.inertia_)
+    # Il silhouette score non può essere calcolato per k=1
     if k > 1:
         silhouette_scores.append(silhouette_score(X_scaled, kmeans.labels_))
     else:
-        silhouette_scores.append(0)
+        silhouette_scores.append(0)  # Per k=1 impostiamo il silhouette score a 0
 
 # Elbow plot
 plt.plot(k_range, wcss, 'bx-')
 plt.title('Elbow Method')
 plt.xlabel('Number of clusters (K)')
 plt.ylabel('WCSS')
+
 plt.show()
 
 # Addestramento del modello finale con K=2 
@@ -75,12 +59,10 @@ dataset['cluster'] = kmeans_final.labels_
 
 # Riordina le colonne del DataFrame
 columns_order = list(dataset.columns)
-if 'diagnosis' in columns_order:
-    columns_order.remove('diagnosis')
-    columns_order.append('diagnosis')
-if 'cluster' in columns_order:
-    columns_order.remove('cluster')
-    columns_order.insert(-1, 'cluster')
+columns_order.remove('diagnosis')
+columns_order.append('diagnosis')
+columns_order.remove('cluster')
+columns_order.insert(-1, 'cluster')
 dataset_reordered = dataset[columns_order]
 
-dataset_reordered.to_csv('Breast_Cancer_KMeans-clusters.csv', index=False)
+dataset_reordered.to_csv('breast-cancer_clusters.csv', index=False)

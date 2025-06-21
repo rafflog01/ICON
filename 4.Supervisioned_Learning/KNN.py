@@ -13,31 +13,24 @@ from sklearn.metrics import average_precision_score, ConfusionMatrixDisplay
 from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 from sklearn.preprocessing import StandardScaler
-from imblearn.over_sampling import SMOTE
-from sklearn.pipeline import Pipeline
-from imblearn.pipeline import Pipeline as ImbPipeline  # Attenzione: import giusto!
-from imblearn.over_sampling import SMOTE
-
-# Stampa la directory corrente per debug
-print(f"Directory di lavoro corrente: {os.getcwd()}")
 
 # Caricamento del dataset
 try:
-    dataset = pd.read_csv("Breast_Cancer.csv")
+    dataset = pd.read_csv("breast-cancer.csv")
 except FileNotFoundError:
     try:
-        dataset = pd.read_csv("../2.Ontologia/Breast_Cancer.csv")
+        dataset = pd.read_csv("../2.Ontologia/breast-cancer.csv")
     except FileNotFoundError:
         try:
-            dataset = pd.read_csv("2.Ontologia/Breast_Cancer.csv")
+            dataset = pd.read_csv("2.Ontologia/breast-cancer.csv")
         except FileNotFoundError:
-            dataset = pd.read_csv("../../2.Ontologia/Breast_Cancer.csv")
+            dataset = pd.read_csv("../../2.Ontologia/breast-cancer.csv")
 
 print(dataset.info())
 
 # Preparazione dati
-y = dataset['Status'].map({'Alive': 0, 'Dead': 1})
-X = dataset.drop(['Status', 'Survival Months'], axis=1)  
+y = dataset['diagnosis'].map({'B': 0, 'M': 1})
+X = dataset.drop(['diagnosis'], axis=1)
 if 'id' in X.columns:
     X = X.drop(['id'], axis=1)
 X.drop(X.columns[X.columns.str.contains('unnamed', case=False)], axis=1, inplace=True)
@@ -52,34 +45,37 @@ print(f"Colonne numeriche: {list(numerical_cols)}")
 # Utilizziamo solo le colonne numeriche per l'analisi KNN
 X = X[numerical_cols]
 
-# Divisione train-test (usa ancora y_train, X_train originali, NON bilanciati)
+# Divisione train-test
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.20, random_state=42, shuffle=True, stratify=y
 )
 
-# Trovo K ottimale semplicemente bilanciando prima (ma ora cerchiamo il migliore sulla cross-val)
+# Trovo K ottimale eseguendo scaling e knn
 error = []
 for i in range(1, 20):
-    pipeline_tmp = ImbPipeline(steps=[
-        ('smote', SMOTE(random_state=42)),
+    pipeline_tmp = [
         ('scaler', StandardScaler()),
         ('knn', KNeighborsClassifier(n_neighbors=i))
-    ])
-    pipeline_tmp.fit(X_train, y_train)
-    pred_i = pipeline_tmp.predict(X_test)
+    ]
+    from sklearn.pipeline import Pipeline
+
+    p = Pipeline(steps=pipeline_tmp)
+    p.fit(X_train, y_train)
+    pred_i = p.predict(X_test)
     error.append(np.mean(pred_i != y_test))
 
 optimal_k = error.index(min(error)) + 1
 print(f"\nK ottimale trovato: {optimal_k}")
 
 # Preparo la pipeline definitiva
-pipeline = ImbPipeline(steps=[
-    ('smote', SMOTE(random_state=42)),
-    ('scaler', StandardScaler()),  # <--- STANDARDIZZAZIONE
+from sklearn.pipeline import Pipeline
+
+pipeline = Pipeline(steps=[
+    ('scaler', StandardScaler()),  # Standardizzazione
     ('knn', KNeighborsClassifier(n_neighbors=optimal_k))
 ])
 
-# Cross-validation con SMOTE DENTRO IL FOLD, su tutto il train originale
+# Cross-validation
 cv_scores = cross_val_score(pipeline, X_train, y_train, cv=5)
 print('\nCross-validation results:')
 print(f'Mean accuracy: {np.mean(cv_scores):.4f}')
@@ -97,7 +93,7 @@ print('\nConfusion matrix:\n', confusion_matrix(y_test, prediction))
 
 # Visualizzazione error rate
 plt.figure(figsize=(10, 6))
-plt.plot(range(1, 20), error, color='red', linestyle='dashed', marker='o', markerfacecolor='blue', markersize=10)
+plt.plot(range(1, 20), error, color='red', linestyle='dashed', marker='o', markerfacecolor='black', markersize=10)
 plt.title('Error Rate vs K Value')
 plt.xlabel('K Value')
 plt.ylabel('Mean Error')
@@ -110,10 +106,10 @@ conf_matrix = confusion_matrix(y_test, prediction)
 conf_matrix_percent = conf_matrix.astype('float') / conf_matrix.sum(axis=1)[:, np.newaxis] * 100
 
 plt.figure(figsize=(10, 7))
-sn.heatmap(pd.DataFrame(conf_matrix_percent, 
-                        index=['Alive (0)', 'Dead (1)'],
-                        columns=['Pred Alive (0)', 'Pred Dead (1)']),
-           annot=True, fmt='.2f', cmap='Blues')
+sn.heatmap(pd.DataFrame(conf_matrix_percent,
+                        index=['Benigno (0)', 'Maligno (1)'],
+                        columns=['Pred Benigno (0)', 'Pred Maligno (1)']),
+           annot=True, fmt='.2f', cmap='Oranges')
 plt.title('Matrice di Confusione Normalizzata (%)')
 plt.ylabel('Valore Reale')
 plt.xlabel('Predizione')
@@ -128,16 +124,16 @@ print('\nAUC: %.3f' % auc)
 pyplot.plot([0, 1], [0, 1], linestyle='--')
 pyplot.plot(fpr, tpr, marker='.')
 pyplot.xlabel('FP RATE')
-pyplot.ylabel('TP RATE')
-pyplot.show()
+plt.ylabel('TP RATE')
+plt.show()
 
 # Precision-Recall Curve
 average_precision = average_precision_score(y_test, probs)
 precision, recall, _ = precision_recall_curve(y_test, probs)
 
 plt.figure(figsize=(8, 6))
-plt.step(recall, precision, color='b', alpha=0.2, where='post')
-plt.fill_between(recall, precision, alpha=0.2, color='b', step='post')
+plt.step(recall, precision, color='red', alpha=0.2, where='post')
+plt.fill_between(recall, precision, alpha=0.2, color='orange', step='post')
 plt.xlabel('Recall')
 plt.ylabel('Precision')
 plt.title(f'Precision-Recall curve (AP = {average_precision:.3f})')
@@ -153,5 +149,6 @@ data = {'variance': np.var(cv_scores), 'standard dev': np.std(cv_scores)}
 names = list(data.keys())
 values = list(data.values())
 fig, axs = plt.subplots(1, 1, figsize=(6, 3), sharey=True)
-axs.bar(names, values)
+axs.bar(names, values, color='orange')
+plt.show()
 plt.show()

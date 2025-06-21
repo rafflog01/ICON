@@ -1,536 +1,424 @@
 <?xml version="1.0"?>
 <Ontology xmlns="http://www.w3.org/2002/07/owl#"
-     xml:base="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast"
+     xml:base="http://www.semanticweb.org/utente/ontologies/2025/1/untitled-ontology-9"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:xml="http://www.w3.org/XML/1998/namespace"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-     ontologyIRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast">
-    <Prefix name="" IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast"/>
+     ontologyIRI="http://www.semanticweb.org/utente/ontologies/2025/1/untitled-ontology-9">
+    <Prefix name="" IRI="http://www.semanticweb.org/utente/ontologies/2025/1/untitled-ontology-9/"/>
     <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
     <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
     <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
     <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
     <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Prefix name="untitled-ontology-9" IRI="http://www.semanticweb.org/utente/ontologies/2025/1/untitled-ontology-9#"/>
     <Declaration>
-        <Class IRI="#Analysis"/>
+        <Class IRI="#Cancer"/>
     </Declaration>
     <Declaration>
-        <Class IRI="#Histologic_type"/>
+        <Class IRI="#Diagnosis"/>
     </Declaration>
     <Declaration>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Breast_cancer"/>
+        <Class IRI="#Patient"/>
     </Declaration>
     <Declaration>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Cancer"/>
+        <ObjectProperty IRI="#hasDiagnosis"/>
     </Declaration>
     <Declaration>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Female"/>
+        <DataProperty IRI="#area_mean"/>
     </Declaration>
     <Declaration>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Male"/>
+        <DataProperty IRI="#area_se"/>
     </Declaration>
     <Declaration>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Person"/>
+        <DataProperty IRI="#area_worst"/>
     </Declaration>
     <Declaration>
-        <ObjectProperty IRI="#has_exam"/>
+        <DataProperty IRI="#compactenss_mean"/>
     </Declaration>
     <Declaration>
-        <ObjectProperty IRI="#has_exam_histologic"/>
+        <DataProperty IRI="#compactenss_se"/>
     </Declaration>
     <Declaration>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_breast_cancer"/>
+        <DataProperty IRI="#compactenss_worst"/>
     </Declaration>
     <Declaration>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_cancer"/>
+        <DataProperty IRI="#concave_points_mean"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#age"/>
+        <DataProperty IRI="#concave_points_se"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#deg-malig"/>
+        <DataProperty IRI="#concave_points_worst"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_menopause"/>
+        <DataProperty IRI="#concavity_mean"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#inv-nodes"/>
+        <DataProperty IRI="#concavity_se"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#irradiat"/>
+        <DataProperty IRI="#concavity_worst"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#node-caps"/>
+        <DataProperty IRI="#diagnosis"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#position"/>
+        <DataProperty IRI="#fractal_dimension_mean"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#quadrant"/>
+        <DataProperty IRI="#fractal_dimension_se"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#size"/>
+        <DataProperty IRI="#fractal_dimension_worst"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#John_Doe"/>
+        <DataProperty IRI="#id"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#Luana_Neri"/>
+        <DataProperty IRI="#perimeter_mean"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#Marta_Bruni"/>
+        <DataProperty IRI="#perimeter_se"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#Teresa_Verdi"/>
+        <DataProperty IRI="#perimeter_worst"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#cancer_B"/>
+        <DataProperty IRI="#radius_mean"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#cancer_C"/>
+        <DataProperty IRI="#radius_se"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#cancer_D"/>
+        <DataProperty IRI="#radius_worst"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#generic_analysis"/>
+        <DataProperty IRI="#simmetry_mean"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#generic_histologic_type"/>
+        <DataProperty IRI="#simmetry_se"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#histologic_type_A"/>
+        <DataProperty IRI="#simmetry_worst"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#histologic_type_B"/>
+        <DataProperty IRI="#smoothness_mean"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#histologic_type_C"/>
+        <DataProperty IRI="#smoothness_se"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#histologic_type_D"/>
+        <DataProperty IRI="#smoothness_worst"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Maria_Rossi"/>
+        <DataProperty IRI="#texture_mean"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#cancer_A"/>
+        <DataProperty IRI="#texture_se"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#texture_worst"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#Diagnosis_B"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#Diagnosis_M"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#Patient_000"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#Patient_001"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#Patient_002"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#Patient_003"/>
     </Declaration>
     <SubClassOf>
-        <Class IRI="#Histologic_type"/>
-        <Class IRI="#Analysis"/>
+        <Class IRI="#Cancer"/>
+        <Class IRI="#Patient"/>
     </SubClassOf>
     <SubClassOf>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Breast_cancer"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Cancer"/>
+        <Class IRI="#Diagnosis"/>
+        <Class IRI="#Patient"/>
     </SubClassOf>
-    <SubClassOf>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Female"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Person"/>
-    </SubClassOf>
-    <SubClassOf>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Male"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Person"/>
-    </SubClassOf>
-    <ClassAssertion>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Male"/>
-        <NamedIndividual IRI="#John_Doe"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Female"/>
-        <NamedIndividual IRI="#Luana_Neri"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Female"/>
-        <NamedIndividual IRI="#Marta_Bruni"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Female"/>
-        <NamedIndividual IRI="#Teresa_Verdi"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Breast_cancer"/>
-        <NamedIndividual IRI="#cancer_B"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Breast_cancer"/>
-        <NamedIndividual IRI="#cancer_C"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Cancer"/>
-        <NamedIndividual IRI="#cancer_D"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#Analysis"/>
-        <NamedIndividual IRI="#generic_analysis"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#Histologic_type"/>
-        <NamedIndividual IRI="#generic_histologic_type"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#Histologic_type"/>
-        <NamedIndividual IRI="#histologic_type_A"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#Histologic_type"/>
-        <NamedIndividual IRI="#histologic_type_B"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#Histologic_type"/>
-        <NamedIndividual IRI="#histologic_type_C"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#Histologic_type"/>
-        <NamedIndividual IRI="#histologic_type_D"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Female"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Maria_Rossi"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Breast_cancer"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#cancer_A"/>
-    </ClassAssertion>
     <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#has_exam"/>
-        <NamedIndividual IRI="#John_Doe"/>
-        <NamedIndividual IRI="#generic_analysis"/>
+        <ObjectProperty IRI="#hasDiagnosis"/>
+        <NamedIndividual IRI="#Patient_000"/>
+        <NamedIndividual IRI="#Diagnosis_B"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_cancer"/>
-        <NamedIndividual IRI="#John_Doe"/>
-        <NamedIndividual IRI="#cancer_D"/>
+        <ObjectProperty IRI="#hasDiagnosis"/>
+        <NamedIndividual IRI="#Patient_001"/>
+        <NamedIndividual IRI="#Diagnosis_B"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#has_exam_histologic"/>
-        <NamedIndividual IRI="#Luana_Neri"/>
-        <NamedIndividual IRI="#histologic_type_A"/>
+        <ObjectProperty IRI="#hasDiagnosis"/>
+        <NamedIndividual IRI="#Patient_002"/>
+        <NamedIndividual IRI="#Diagnosis_M"/>
     </ObjectPropertyAssertion>
     <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_breast_cancer"/>
-        <NamedIndividual IRI="#Luana_Neri"/>
-        <NamedIndividual IRI="#cancer_B"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#has_exam_histologic"/>
-        <NamedIndividual IRI="#Marta_Bruni"/>
-        <NamedIndividual IRI="#histologic_type_C"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_breast_cancer"/>
-        <NamedIndividual IRI="#Marta_Bruni"/>
-        <NamedIndividual IRI="#cancer_C"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#has_exam"/>
-        <NamedIndividual IRI="#Teresa_Verdi"/>
-        <NamedIndividual IRI="#generic_analysis"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#has_exam_histologic"/>
-        <NamedIndividual IRI="#Teresa_Verdi"/>
-        <NamedIndividual IRI="#histologic_type_B"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_breast_cancer"/>
-        <NamedIndividual IRI="#Teresa_Verdi"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#cancer_A"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_cancer"/>
-        <NamedIndividual IRI="#Teresa_Verdi"/>
-        <NamedIndividual IRI="#cancer_D"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#has_exam_histologic"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Maria_Rossi"/>
-        <NamedIndividual IRI="#histologic_type_B"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_breast_cancer"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Maria_Rossi"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#cancer_A"/>
+        <ObjectProperty IRI="#hasDiagnosis"/>
+        <NamedIndividual IRI="#Patient_003"/>
+        <NamedIndividual IRI="#Diagnosis_M"/>
     </ObjectPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#age"/>
-        <NamedIndividual IRI="#Luana_Neri"/>
-        <Literal>60-69</Literal>
+        <DataProperty IRI="#diagnosis"/>
+        <NamedIndividual IRI="#Diagnosis_B"/>
+        <Literal>B</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_menopause"/>
-        <NamedIndividual IRI="#Luana_Neri"/>
-        <Literal>it40</Literal>
+        <DataProperty IRI="#diagnosis"/>
+        <NamedIndividual IRI="#Diagnosis_M"/>
+        <Literal>M</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#age"/>
-        <NamedIndividual IRI="#Marta_Bruni"/>
-        <Literal>40-49</Literal>
+        <DataProperty IRI="#area_mean"/>
+        <NamedIndividual IRI="#Patient_000"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">273.9</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_menopause"/>
-        <NamedIndividual IRI="#Marta_Bruni"/>
-        <Literal>premeno</Literal>
+        <DataProperty IRI="#id"/>
+        <NamedIndividual IRI="#Patient_000"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">000</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#age"/>
-        <NamedIndividual IRI="#Teresa_Verdi"/>
-        <Literal>50-59</Literal>
+        <DataProperty IRI="#perimeter_mean"/>
+        <NamedIndividual IRI="#Patient_000"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">60.34</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_menopause"/>
-        <NamedIndividual IRI="#Teresa_Verdi"/>
-        <Literal>it40</Literal>
+        <DataProperty IRI="#radius_mean"/>
+        <NamedIndividual IRI="#Patient_000"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">9.504</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#deg-malig"/>
-        <NamedIndividual IRI="#cancer_B"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">2</Literal>
+        <DataProperty IRI="#radius_worst"/>
+        <NamedIndividual IRI="#Patient_000"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">10.23</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#inv-nodes"/>
-        <NamedIndividual IRI="#cancer_B"/>
-        <Literal>3-5</Literal>
+        <DataProperty IRI="#area_mean"/>
+        <NamedIndividual IRI="#Patient_001"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">520</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#irradiat"/>
-        <NamedIndividual IRI="#cancer_B"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">true</Literal>
+        <DataProperty IRI="#id"/>
+        <NamedIndividual IRI="#Patient_001"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">001</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#node-caps"/>
-        <NamedIndividual IRI="#cancer_B"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">true</Literal>
+        <DataProperty IRI="#perimeter_mean"/>
+        <NamedIndividual IRI="#Patient_001"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">85.63</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#position"/>
-        <NamedIndividual IRI="#cancer_B"/>
-        <Literal>left</Literal>
+        <DataProperty IRI="#radius_mean"/>
+        <NamedIndividual IRI="#Patient_001"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">13.08</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#quadrant"/>
-        <NamedIndividual IRI="#cancer_B"/>
-        <Literal>left-low</Literal>
+        <DataProperty IRI="#radius_worst"/>
+        <NamedIndividual IRI="#Patient_001"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">14.5</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#size"/>
-        <NamedIndividual IRI="#cancer_B"/>
-        <Literal>5-9</Literal>
+        <DataProperty IRI="#area_mean"/>
+        <NamedIndividual IRI="#Patient_002"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">1001</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#deg-malig"/>
-        <NamedIndividual IRI="#cancer_C"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">3</Literal>
+        <DataProperty IRI="#id"/>
+        <NamedIndividual IRI="#Patient_002"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">002</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#inv-nodes"/>
-        <NamedIndividual IRI="#cancer_C"/>
-        <Literal>3-5</Literal>
+        <DataProperty IRI="#perimeter_mean"/>
+        <NamedIndividual IRI="#Patient_002"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">122.8</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#irradiat"/>
-        <NamedIndividual IRI="#cancer_C"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">false</Literal>
+        <DataProperty IRI="#radius_mean"/>
+        <NamedIndividual IRI="#Patient_002"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">17.99</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#node-caps"/>
-        <NamedIndividual IRI="#cancer_C"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">false</Literal>
+        <DataProperty IRI="#radius_worst"/>
+        <NamedIndividual IRI="#Patient_002"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">25.38</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#position"/>
-        <NamedIndividual IRI="#cancer_C"/>
-        <Literal>right</Literal>
+        <DataProperty IRI="#area_mean"/>
+        <NamedIndividual IRI="#Patient_003"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">797.8</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#quadrant"/>
-        <NamedIndividual IRI="#cancer_C"/>
-        <Literal>central</Literal>
+        <DataProperty IRI="#id"/>
+        <NamedIndividual IRI="#Patient_003"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">003</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#size"/>
-        <NamedIndividual IRI="#cancer_C"/>
-        <Literal>10-14</Literal>
+        <DataProperty IRI="#perimeter_mean"/>
+        <NamedIndividual IRI="#Patient_003"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">102.7</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#age"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Maria_Rossi"/>
-        <Literal>50-59</Literal>
+        <DataProperty IRI="#radius_mean"/>
+        <NamedIndividual IRI="#Patient_003"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">16.02</Literal>
     </DataPropertyAssertion>
     <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_menopause"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Maria_Rossi"/>
-        <Literal>ig40</Literal>
+        <DataProperty IRI="#radius_worst"/>
+        <NamedIndividual IRI="#Patient_003"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#decimal">19.19</Literal>
     </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#deg-malig"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#cancer_A"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">1</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#inv-nodes"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#cancer_A"/>
-        <Literal>0-2</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#irradiat"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#cancer_A"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">true</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#node-caps"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#cancer_A"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">true</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#position"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#cancer_A"/>
-        <Literal>left</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#quadrant"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#cancer_A"/>
-        <Literal>left_low</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#size"/>
-        <NamedIndividual IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#cancer_A"/>
-        <Literal>0-4</Literal>
-    </DataPropertyAssertion>
-    <SubObjectPropertyOf>
-        <ObjectProperty IRI="#has_exam_histologic"/>
-        <ObjectProperty IRI="#has_exam"/>
-    </SubObjectPropertyOf>
-    <SubObjectPropertyOf>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_breast_cancer"/>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_cancer"/>
-    </SubObjectPropertyOf>
     <ObjectPropertyDomain>
-        <ObjectProperty IRI="#has_exam"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Person"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty IRI="#has_exam_histologic"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Person"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_breast_cancer"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Female"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyDomain>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_cancer"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Person"/>
+        <ObjectProperty IRI="#hasDiagnosis"/>
+        <Class IRI="#Patient"/>
     </ObjectPropertyDomain>
     <ObjectPropertyRange>
-        <ObjectProperty IRI="#has_exam"/>
-        <Class IRI="#Analysis"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty IRI="#has_exam_histologic"/>
-        <Class IRI="#Histologic_type"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_breast_cancer"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Breast_cancer"/>
-    </ObjectPropertyRange>
-    <ObjectPropertyRange>
-        <ObjectProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_cancer"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Cancer"/>
+        <ObjectProperty IRI="#hasDiagnosis"/>
+        <Class IRI="#Diagnosis"/>
     </ObjectPropertyRange>
     <SubDataPropertyOf>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#quadrant"/>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#position"/>
+        <DataProperty IRI="#smoothness_mean"/>
+        <DataProperty abbreviatedIRI="owl:topDataProperty"/>
     </SubDataPropertyOf>
     <DataPropertyDomain>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#age"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Person"/>
+        <DataProperty IRI="#area_mean"/>
+        <Class IRI="#Cancer"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#deg-malig"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Cancer"/>
+        <DataProperty IRI="#area_se"/>
+        <Class IRI="#Cancer"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_menopause"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Female"/>
+        <DataProperty IRI="#area_worst"/>
+        <Class IRI="#Cancer"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#inv-nodes"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Cancer"/>
+        <DataProperty IRI="#compactenss_mean"/>
+        <Class IRI="#Cancer"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#irradiat"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Cancer"/>
+        <DataProperty IRI="#compactenss_se"/>
+        <Class IRI="#Cancer"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#node-caps"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Cancer"/>
+        <DataProperty IRI="#compactenss_worst"/>
+        <Class IRI="#Cancer"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#position"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Breast_cancer"/>
+        <DataProperty IRI="#concave_points_mean"/>
+        <Class IRI="#Cancer"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#quadrant"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Breast_cancer"/>
+        <DataProperty IRI="#concave_points_se"/>
+        <Class IRI="#Cancer"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#size"/>
-        <Class IRI="http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Cancer"/>
+        <DataProperty IRI="#concave_points_worst"/>
+        <Class IRI="#Cancer"/>
     </DataPropertyDomain>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#Breast_cancer</IRI>
-        <Literal>Only Female have Breast Cancer</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#age</IRI>
-        <Literal>10-19, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80-89, 90-99</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#deg-malig</IRI>
-        <Literal>1, 2 or 3</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#has_menopause</IRI>
-        <Literal>lt40, ge40 or premeno</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#inv-nodes</IRI>
-        <Literal>0-2, 3-5, 6-8, 9-11, 12-14, 15-17, 18-20, 21-23, 24-26, 27-29, 30-32, 33-35, 36-39</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#irradiat</IRI>
-        <Literal>true or false</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#node-caps</IRI>
-        <Literal>true or false</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#position</IRI>
-        <Literal>left or right</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#quadrant</IRI>
-        <Literal>central, left-low, left-up, right-low or right-up</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <IRI>http://www.semanticweb.org/cgiac/ontologies/2022/2/breast#size</IRI>
-        <Literal>tumor size:  0-4, 5-9, 10-14, 15-19, 20-24, 25-29, 30-34, 35-39, 40-44, 45-49, 50-54, 55-59</Literal>
-    </AnnotationAssertion>
+    <DataPropertyDomain>
+        <DataProperty IRI="#concavity_mean"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#concavity_se"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#concavity_worst"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#diagnosis"/>
+        <Class IRI="#Diagnosis"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#fractal_dimension_mean"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#fractal_dimension_se"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#fractal_dimension_worst"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#id"/>
+        <Class IRI="#Patient"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#perimeter_mean"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#perimeter_se"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#perimeter_worst"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#radius_mean"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#radius_se"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#radius_worst"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#simmetry_mean"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#simmetry_se"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#simmetry_worst"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#smoothness_mean"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#smoothness_se"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#smoothness_worst"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#texture_mean"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#texture_se"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#texture_worst"/>
+        <Class IRI="#Cancer"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#area_worst"/>
+        <Datatype abbreviatedIRI="xsd:decimal"/>
+    </DataPropertyRange>
 </Ontology>
-
-
-
-<!-- Generated by the OWL API https://github.com/owlcs/owlapi -->
-

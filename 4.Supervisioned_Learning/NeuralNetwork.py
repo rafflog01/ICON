@@ -1,4 +1,3 @@
-import tensorflow as tf
 from inspect import signature
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
@@ -7,173 +6,135 @@ import matplotlib.pyplot as plt
 import seaborn as sn
 from sklearn.model_selection import train_test_split, KFold
 from tensorflow import keras
-from sklearn.metrics import confusion_matrix, classification_report, roc_auc_score, roc_curve, \
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report, roc_auc_score, roc_curve, \
     average_precision_score, precision_recall_curve, f1_score
-from sklearn.utils import class_weight
-from sklearn.model_selection import StratifiedKFold
-from imblearn.over_sampling import SMOTE
+from tensorflow.keras import backend as K
 
-# Riproducibilita'
-np.random.seed(42)
-tf.random.set_seed(42)
+K.clear_session()
 
 # Caricamento del dataset
 try:
-    data = pd.read_csv("../2.Ontologia/Breast_Cancer.csv")
+    data = pd.read_csv("../2.Ontologia/breast-cancer.csv")
 except FileNotFoundError:
     try:
-        data = pd.read_csv("2.Ontologia/Breast_Cancer.csv")
+        data = pd.read_csv("2.Ontologia/breast-cancer.csv")
     except FileNotFoundError:
-        data = pd.read_csv("Breast_Cancer.csv")
+        data = pd.read_csv("breast-cancer.csv")
+data['diagnosis'] = data['diagnosis'].replace('M', 1)
+data['diagnosis'] = data['diagnosis'].replace('B', 0)
 
-# Creazione della colonna 'diagnosis'
-data['diagnosis'] = data['Status'].apply(lambda x: 1 if x == 'Dead' else 0)
+# Esplorazione del dataset
+print(data.info())
 
-# Rimozione valori mancanti
-data = data.dropna()
-
-# Separazione feature e target
+# Divido i dati in features di input e feature target
 y = data['diagnosis']
-X = data.drop(['diagnosis', 'Status'], axis=1)
+X = data.drop(['id', 'diagnosis'], axis=1)
 X.drop(X.columns[X.columns.str.contains('unnamed', case=False)], axis=1, inplace=True)
 
-# Split train-test
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.20, random_state=42, shuffle=True, stratify=y
-)
+# Divido il dataset in set di addestramento e test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42, shuffle=True, stratify=y)
 
-# Identificazione tipi di feature
-categorical_cols = X_train.select_dtypes(include=['object', 'category']).columns
-numeric_cols = X_train.select_dtypes(include=['int64', 'float64']).columns
-
-# One-hot encoding per le categoriche
-X_train_cat = pd.get_dummies(X_train[categorical_cols], drop_first=True) if len(categorical_cols) > 0 else pd.DataFrame(index=X_train.index)
-X_test_cat = pd.get_dummies(X_test[categorical_cols], drop_first=True) if len(categorical_cols) > 0 else pd.DataFrame(index=X_test.index)
-
-# Standardizzazione numeriche
+# Standardizzazione
 scaler = StandardScaler()
-X_train_num_scaled = pd.DataFrame(scaler.fit_transform(X_train[numeric_cols]), columns=numeric_cols, index=X_train.index) if len(numeric_cols) > 0 else pd.DataFrame()
-X_test_num_scaled = pd.DataFrame(scaler.transform(X_test[numeric_cols]), columns=numeric_cols, index=X_test.index) if len(numeric_cols) > 0 else pd.DataFrame()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 
-# Combinazione
-X_train_scaled = pd.concat([X_train_num_scaled, X_train_cat], axis=1)
-X_test_scaled = pd.concat([X_test_num_scaled, X_test_cat], axis=1)
+# Converti X_train_scaled e X_test_scaled in DataFrame
+X_train_scaled = pd.DataFrame(X_train_scaled, columns=X.columns)
+X_test_scaled = pd.DataFrame(X_test_scaled, columns=X.columns)
 
-y_train = y_train.loc[X_train_scaled.index]
-y_test = y_test.loc[X_test_scaled.index]
 
-# Costruzione modello
-def create_model(input_shape=None):
-    if input_shape is None:
-        input_shape = X_train_scaled.shape[1]
+# Costruisco il modello della rete neurale
+def create_model():
     model = keras.Sequential([
-        keras.layers.Input(shape=(input_shape,)),
-        keras.layers.Dense(64, activation='relu', kernel_regularizer=keras.regularizers.l2(0.001)),
-        keras.layers.Dropout(0.3),
-        keras.layers.Dense(32, activation='relu', kernel_regularizer=keras.regularizers.l2(0.001)),
-        keras.layers.Dropout(0.3),
+        keras.layers.Input(shape=(X_train_scaled.shape[1],)),
+        keras.layers.Dense(64, activation='relu'),
+        keras.layers.Dense(32, activation='relu'),
         keras.layers.Dense(1, activation='sigmoid')
     ])
+
+    # Compilazione del modello
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
     return model
 
-# Pesi delle classi
-class_weights = class_weight.compute_class_weight('balanced', classes=np.unique(y_train), y=y_train)
-class_weight_dict = {i: class_weights[i] for i in range(len(class_weights))}
 
-# Addestramento modello principale
-early_stopping = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+# Creazione istanza del modello e addestramento
 model1 = create_model()
-history = model1.fit(X_train_scaled, y_train, epochs=30, batch_size=64, class_weight=class_weight_dict, validation_split=0.2, callbacks=[early_stopping])
+model1.fit(X_train_scaled, y_train, epochs=30, batch_size=64)
 
-# Valutazione test
+# Valutazione delle prestazioni del modello
 test_loss, test_accuracy = model1.evaluate(X_test_scaled, y_test)
 print(f'Test Accuracy: {test_accuracy}')
 
-# Predizioni
+# Calcolo delle previsioni e arrotondamento
 predictions = model1.predict(X_test_scaled)
-threshold = 0.5
-rounded = (predictions[:, 0] >= threshold).astype(int)
+rounded = [round(x[0]) for x in predictions]
 
-# Classification report e confusion matrix
+# Stampa del report di classificazione e della matrice di confusione
 print('\nClassification report:\n', classification_report(y_test, rounded))
+print('\nConfusion matrix:\n', confusion_matrix(y_test, rounded))
+
+# Creazione grafica della matrice di confusione con percentuali
 conf_matrix = confusion_matrix(y_test, rounded)
+
+# Normalizzazione della matrice di confusione (percentuali)
 conf_matrix_percent = conf_matrix.astype('float') / conf_matrix.sum(axis=1)[:, np.newaxis] * 100
+
+# Creazione del DataFrame per la visualizzazione con percentuali
 df_cm = pd.DataFrame(conf_matrix_percent, index=[i for i in "01"], columns=[i for i in "01"])
+
 plt.figure(figsize=(10, 7))
-sn.heatmap(df_cm, annot=True, fmt='.2f', cmap='Blues')
+sn.heatmap(df_cm, annot=True, fmt='.2f', cmap='Oranges')
+
 plt.title('Matrice di confusione normalizzata (percentuali)')
 plt.xlabel('Predicted')
 plt.ylabel('True')
 plt.show()
 
-# K-Fold Cross Validation
-kf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+# K-fold Cross-Validation
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
 cv_scores = []
 
-for train_index, val_index in kf.split(X_train, y_train):
-    # Separa i dati per il fold corrente
-    X_tr_fold, X_val_fold = X_train.iloc[train_index], X_train.iloc[val_index]
-    y_tr_fold, y_val_fold = y_train.iloc[train_index], y_train.iloc[val_index]
+# Esegui la cross-validation
+for train_index, val_index in kf.split(X_train_scaled):
+    X_train_fold, X_val_fold = X_train_scaled.iloc[train_index], X_train_scaled.iloc[val_index]
+    y_train_fold, y_val_fold = y_train.iloc[train_index], y_train.iloc[val_index]
 
-    # Riconoscimento colonne numeriche/categoriche (solo per consistenza)
-    categorical_cols_cv = X_tr_fold.select_dtypes(include=['object', 'category']).columns
-    numeric_cols_cv = X_tr_fold.select_dtypes(include=['int64', 'float64']).columns
+    modelK = create_model()
+    modelK.fit(X_train_fold, y_train_fold, epochs=30, batch_size=64, verbose=0)
 
-    # One-hot encoding per le categoriche: colonne consistenti col training
-    X_tr_cat = pd.get_dummies(X_tr_fold[categorical_cols_cv], drop_first=True) if len(categorical_cols_cv) > 0 else pd.DataFrame(index=X_tr_fold.index)
-    X_val_cat = pd.get_dummies(X_val_fold[categorical_cols_cv], drop_first=True) if len(categorical_cols_cv) > 0 else pd.DataFrame(index=X_val_fold.index)
-
-    # Standardizzazione numeriche
-    scaler_cv = StandardScaler()
-    X_tr_num_scaled = pd.DataFrame(scaler_cv.fit_transform(X_tr_fold[numeric_cols_cv]), columns=numeric_cols_cv, index=X_tr_fold.index) if len(numeric_cols_cv) > 0 else pd.DataFrame()
-    X_val_num_scaled = pd.DataFrame(scaler_cv.transform(X_val_fold[numeric_cols_cv]), columns=numeric_cols_cv, index=X_val_fold.index) if len(numeric_cols_cv) > 0 else pd.DataFrame()
-
-    # Combina le features per train e validation
-    X_tr_scaled = pd.concat([X_tr_num_scaled, X_tr_cat], axis=1)
-    X_val_scaled = pd.concat([X_val_num_scaled, X_val_cat], axis=1)
-    # Allinea le colonne
-    X_val_scaled = X_val_scaled.reindex(columns=X_tr_scaled.columns, fill_value=0)
-
-    # Applica SMOTE SOLO dopo la codifica e la standardizzazione!
-    smote = SMOTE(random_state=42)
-    X_tr_fold_bal, y_tr_fold_bal = smote.fit_resample(X_tr_scaled, y_tr_fold)
-
-    # Riallina indici target
-    y_tr_fold_bal = pd.Series(y_tr_fold_bal, index=X_tr_fold_bal.index)
-    y_val_fold = y_val_fold.loc[X_val_scaled.index]
-
-    # Definisci/costruiamo il modello
-    modelK = create_model(X_tr_scaled.shape[1])
-    early_stopping = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-    modelK.fit(X_tr_fold_bal, y_tr_fold_bal, epochs=30, batch_size=64, verbose=0,
-               validation_split=0.2, callbacks=[early_stopping])
-
-    val_loss, val_accuracy = modelK.evaluate(X_val_scaled, y_val_fold)
+    val_loss, val_accuracy = modelK.evaluate(X_val_fold, y_val_fold)
     cv_scores.append(val_accuracy)
+    K.clear_session()
 
-# Report finale
+# Stampa delle statistiche ottenute dalla cross-validation
 print('\ncv_scores mean:{}'.format(np.mean(cv_scores)))
 print('\ncv_score variance:{}'.format(np.var(cv_scores)))
 print('\ncv_score standard deviation:{}'.format(np.std(cv_scores)))
 
-# ROC e AUC
+# Calcolo dell'AUC per la curva ROC
 probs = model1.predict(X_test_scaled)[:, 0]
 auc = roc_auc_score(y_test, probs)
 print('AUC: %.3f' % auc)
+
+# Calcolo della curva ROC e visualizzazione
 fpr, tpr, thresholds = roc_curve(y_test, probs)
-plt.plot([0, 1], [0, 1], linestyle='--')
+plt.plot([0, 1], [0, 1], linestyle='--')  # Usa plt invece di pyplot
 plt.plot(fpr, tpr, marker='.')
 plt.xlabel('FP RATE')
 plt.ylabel('TP RATE')
 plt.show()
 
-# Precision-Recall
+# Calcolo della curva Precision-Recall e visualizzazione
 average_precision = average_precision_score(y_test, probs)
 precision, recall, _ = precision_recall_curve(y_test, probs)
-step_kwargs = ({'step': 'post'} if 'step' in signature(plt.fill_between).parameters else {})
-plt.step(recall, precision, color='b', alpha=0.2, where='post')
-plt.fill_between(recall, precision, alpha=0.2, color='b', **step_kwargs)
+
+step_kwargs = ({'step': 'post'}
+               if 'step' in signature(plt.fill_between).parameters
+               else {})
+plt.step(recall, precision, color='red', alpha=0.2, where='post')
+plt.fill_between(recall, precision, alpha=0.2, color='orange', **step_kwargs)
 plt.xlabel('Recall')
 plt.ylabel('Precision')
 plt.ylim([0.0, 1.05])
@@ -181,14 +142,15 @@ plt.xlim([0.0, 1.0])
 plt.title('2-class Precision-Recall curve: AP={0:0.2f}'.format(average_precision))
 plt.show()
 
-# F1-score
+# Calcolo e visualizzazione dell'F1-score
 f1 = f1_score(y_test, rounded)
 print('\nf1 score: ', f1)
 
-# Grafico varianza e std della cross-validation
-cv_stats = {'variance': np.var(cv_scores), 'standard deviation': np.std(cv_scores)}
-names = list(cv_stats.keys())
-values = list(cv_stats.values())
+# Creazione di un grafico per visualizzare varianza e deviazione standard dei cv_scores
+data = {'variance': np.var(cv_scores), 'standard deviation': np.std(cv_scores)}
+names = list(data.keys())
+values = list(data.values())
 fig, axs = plt.subplots(1, 1, figsize=(6, 3), sharey=True)
-axs.bar(names, values)
+axs.bar(names, values, color='orange')
+plt.show()
 plt.show()
